@@ -1,7 +1,7 @@
 # Установка Filebeat (сборщик логов) на веб-серверы
 ---
 - name: Установка Filebeat на веб-серверы
-  hosts: webservers  # Только веб-серверы
+  hosts: webservers  # На все веб серверы
   become: yes
   
   tasks:

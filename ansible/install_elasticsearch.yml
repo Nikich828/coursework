@@ -1,6 +1,6 @@
 ---
 - name: Установка Elasticsearch
-  hosts: elastic  # Целевая группа серверов
+  hosts: elastic  # Сервер elastic
   become: yes  # Повышение привилегий
   
   tasks:
@@ -18,13 +18,13 @@
         value: "262144"  # Увеличение лимита виртуальной памяти
       notify: restart elasticsearch  # Триггер перезагрузки
 
-    # Копирование локального DEB пакета
+    # Копирование локального пакета
     - name: Копирование пакета Elasticsearch
       copy:
         src: "/home/nvlychagin/Downloads/elasticsearch-8.8.0-amd64.deb"
         dest: "/tmp/elasticsearch.deb"
 
-    # Установка из локального пакета
+    # Установка
     - name: Установка Elasticsearch из пакета
       apt:
         deb: "/tmp/elasticsearch.deb"

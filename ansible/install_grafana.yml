@@ -1,7 +1,7 @@
 # Установка и настройка Grafana (визуализация метрик)
 ---
 - name: Установка и настройка Grafana из локального пакета
-  hosts: grafana  # Серверы Grafana
+  hosts: grafana  # Сервер Grafana
   become: yes
   vars:
     # Переменные с дефолтными значениями
@@ -20,7 +20,7 @@
         state: present
         update_cache: yes
 
-    # Копирование локального пакета Grafana
+    # Копирование локального пакета
     - name: Копирование пакета Grafana на удаленный сервер
       copy:
         src: "/home/nvlychagin/Downloads/grafana-enterprise_12.3.1_20271043721_linux_amd64.deb"

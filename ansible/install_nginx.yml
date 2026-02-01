@@ -1,7 +1,7 @@
 # Установка и настройка веб-сервера Nginx
 ---
 - name: Установка и настройка Nginx на веб-серверах
-  hosts: webservers  # Все веб-серверы
+  hosts: webservers  # На все веб серверы
   become: yes
   vars:
     server_name: "{{ ansible_default_ipv4.address }}"  # IP адрес сервера
@@ -18,7 +18,7 @@
         group: www-data
         mode: '0755'
 
-    # Установка Nginx
+    # Установка
     - name: Обновление apt cache и установка Nginx
       apt:
         name: nginx

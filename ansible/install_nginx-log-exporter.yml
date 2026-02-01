@@ -1,11 +1,11 @@
 # Установка экспортера логов Nginx для Prometheus
 ---
 - name: Установка Nginx Log Exporter на веб-серверы
-  hosts: webservers  # На все веб-серверы
+  hosts: webservers  # На все веб серверы
   become: yes
 
   tasks:
-    # Скачивание бинарника с GitHub
+    # Скачивание с GitHub
     - name: Загрузка nginx-log-exporter
       get_url:
         url: "https://github.com/martin-helmich/prometheus-nginxlog-exporter/releases/download/v{{ nginx_log_exporter_version }}/prometheus-nginxlog-exporter_{{ nginx_log_exporter_version }}_linux_amd64.tar.gz"
@@ -20,7 +20,7 @@
         remote_src: yes
         creates: "/tmp/prometheus-nginxlog-exporter"  
 
-    # Установка бинарника
+    # Установка
     - name: Установка nginx-log-exporter
       copy:
         src: "/tmp/prometheus-nginxlog-exporter"  
