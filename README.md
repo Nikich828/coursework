@@ -77,4 +77,12 @@ Cоздайте ВМ, разверните на ней Elasticsearch. Устан
 - elasticsearch-server
 - kibana-server
 
-Перехожу
+Переходим в папку terraform и вводим следующие команды:
+
+```bash
+terraform init      # Инициализация проекта
+terraform validate  # Проверка синтаксиса
+terraform plan      # Планирование изменений
+terraform apply     # Применение инфраструктуры
+```
+![Результат применения инфраструктуры](https://github.com/Nikich828/coursework/blob/main/1.jpeg)
