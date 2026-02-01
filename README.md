@@ -87,3 +87,77 @@ terraform apply     # Применение инфраструктуры
 ```
 **Результат применения инфраструктуры**:
 ![Результат применения инфраструктуры](https://github.com/Nikich828/coursework/blob/main/1.jpeg)
+
+Дальше переходим в директорию ansible, удаляем файл с информацией о серверах, к которым подключались, чтобы не было ошибки при подлючении по ssh и запускаем copy_file.yml для переноса приватного ключа на бастион:
+
+```bash
+rm /home/nvlychagin/.ssh/known_hosts             # Удаление файла known_hosts для очистки кеша SSH подключений
+ansible-playbook -i inventory.ini copy_file.yml  # Запуск Ansible playbook с указанием inventory файла
+```
+**Процесс применения плейбука copy_file.yml**:
+![Процесс применения плейбука copy_file.yml](https://github.com/Nikich828/coursework/blob/main/2.jpeg)
+
+Теперь запускаем плейбук install_nginx.yml для установки Nginx на webservers:
+
+```bash
+ansible-playbook -i inventory.ini install_nginx.yml
+```
+**Процесс применения плейбука install_nginx.yml**:
+![Процесс применения плейбука install_nginx.yml](https://github.com/Nikich828/coursework/blob/main/3.jpeg)
+
+После устанавливаем Prometheus (для собирания и хранения метрик) с помощью плейбука install_prometheus.yml:
+
+```bash
+ansible-playbook -i inventory.ini install_prometheus.yml
+```
+**Процесс применения плейбука install_prometheus.yml**:
+![Процесс применения плейбука install_prometheus.yml](https://github.com/Nikich828/coursework/blob/main/4.jpeg)
+
+Теперь node-exporter на webservers для сбора метрик на этих серверах:
+
+```bash
+ansible-playbook -i inventory.ini install_node-exporter.yml
+```
+**Процесс применения плейбука install_node-exporter.yml**:
+![Процесс применения плейбука install_node-exporter.yml](https://github.com/Nikich828/coursework/blob/main/5.jpeg)
+
+Далее также для webservers устнавливаем nginx-log-exporter.yml для сборки логов Nginx и создания метрик:
+
+```bash
+ansible-playbook -i inventory.ini install_nginx-log-exporter.yml
+```
+**Процесс применения плейбука install_nginx-log-exporter.yml**:
+![Процесс применения плейбука install_nginx-log-exporter.yml](https://github.com/Nikich828/coursework/blob/main/6.jpeg)
+
+Установим grafana для визуализации метрик в дашбордах:
+
+```bash
+ansible-playbook -i inventory.ini install_grafana.yml
+```
+**Процесс применения плейбука install_grafana.yml**:
+![Процесс применения плейбука install_grafana.yml](https://github.com/Nikich828/coursework/blob/main/7.jpeg)
+
+Далее установим elasticsearch, которая примиает, индексирует и хранит логи:
+
+```bash
+ansible-playbook -i inventory.ini install_elasticsearch.yml
+```
+**Процесс применения плейбука install_elasticsearch.yml**:
+![Процесс применения плейбука install_elasticsearch.yml](https://github.com/Nikich828/coursework/blob/main/8.jpeg)
+
+Теперь установим kibana, задача которой собирать данные из elasticsearch и визуализирует их:
+
+```bash
+ansible-playbook -i inventory.ini install_kibana.yml
+```
+**Процесс применения плейбука install_kibana.yml**:
+![Процесс применения плейбука install_kibana.yml](https://github.com/Nikich828/coursework/blob/main/9.jpeg)
+
+И наконец приступи к установки filebeat для сбора логов:
+
+```bash
+ansible-playbook -i inventory.ini install_filebeat.yml
+```
+
+**Процесс применения плейбука install_filebeat.yml**:
+![Процесс применения плейбука install_filebeat.yml](https://github.com/Nikich828/coursework/blob/main/9.jpeg)
