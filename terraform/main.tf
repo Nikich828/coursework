@@ -184,7 +184,7 @@ resource "local_file" "ansible_vars" {
   kibana_host: "${yandex_compute_instance.kibana_vm.network_interface.0.ip_address}"
   grafana_host: "${yandex_compute_instance.grafana_vm.network_interface.0.ip_address}"
   
-  # Версии компонентов
+  
   elasticsearch_version: "8.8.0"
   kibana_version: "8.8.0"
   filebeat_version: "8.8.0"
