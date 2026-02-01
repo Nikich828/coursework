@@ -196,7 +196,7 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 **Сайт курсовая работа**:
 ![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/13.jpeg)
 
-Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana](http://84.252.137.244:3000)**:
+Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana](http://84.252.137.244:3000/d/use-dashboard/dashboard?orgId=1&from=now-6h&to=now&timezone=browser&var-instance=$__all&var-mountpoint=$__all&var-device=$__all&refresh=10s)**:
 
 **Проверка доступа к Grafana и работы дашборда**:
 ![Grafana](https://github.com/Nikich828/coursework/blob/main/11.jpeg)
