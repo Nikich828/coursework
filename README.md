@@ -85,4 +85,5 @@ terraform validate  # Проверка синтаксиса
 terraform plan      # Планирование изменений
 terraform apply     # Применение инфраструктуры
 ```
+**Результат применения инфраструктуры**:
 ![Результат применения инфраструктуры](https://github.com/Nikich828/coursework/blob/main/1.jpeg)
