@@ -1,0 +1,103 @@
+# Установка Prometheus (система мониторинга и алертинга)
+---
+- name: Установка и настройка Prometheus
+  hosts: prometheus  # Выделенный сервер Prometheus
+  become: yes
+ 
+  tasks:
+    # Создание системного пользователя
+    - name: Создание пользователя Prometheus
+      user:
+        name: prometheus
+        system: yes
+        shell: /usr/sbin/nologin
+        home: /var/lib/prometheus
+
+    # Скачивание Prometheus
+    - name: Загрузка Prometheus
+      get_url:
+        url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: /tmp/prometheus.tar.gz
+
+    # Распаковка
+    - name: Распаковка Prometheus
+      unarchive:
+        src: /tmp/prometheus.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    # Установка основного бинарника
+    - name: Установка Prometheus
+      copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+        dest: /usr/local/bin/prometheus
+        owner: prometheus
+        group: prometheus
+        mode: '0755'
+        remote_src: yes
+
+    # Установка утилиты promtool
+    - name: Установка promtool
+      copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool"
+        dest: /usr/local/bin/promtool
+        owner: prometheus
+        group: prometheus
+        mode: '0755'
+        remote_src: yes
+
+    # Создание необходимых директорий
+    - name: Создание директорий
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: prometheus
+        group: prometheus
+      loop:
+        - /etc/prometheus  # Конфигурация
+        - /var/lib/prometheus  # Данные
+
+    # Копирование веб-интерфейсов
+    - name: Копирование файлов конфигурации
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: prometheus
+        group: prometheus
+        remote_src: yes
+      loop:
+        - { src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/consoles", dest: "/etc/prometheus/consoles" }
+        - { src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/console_libraries", dest: "/etc/prometheus/console_libraries" }
+
+    # Создание основной конфигурации из шаблона
+    - name: Создание конфигурации Prometheus
+      template:
+        src: prometheus.yml.j2  # Использует шаблон prometheus.yml.j2
+        dest: /etc/prometheus/prometheus.yml
+        owner: prometheus
+        group: prometheus
+      notify: restart prometheus
+
+    # Создание systemd службы из шаблона
+    - name: Создание systemd службы
+      template:
+        src: prometheus.service.j2  # Использует шаблон
+        dest: /etc/systemd/system/prometheus.service
+
+    # Перезагрузка systemd
+    - name: Перезагрузка systemd
+      systemd:
+        daemon_reload: yes
+
+    # Запуск сервиса
+    - name: Запуск Prometheus
+      systemd:
+        name: prometheus
+        state: started
+        enabled: yes
+
+  handlers:
+    - name: restart prometheus
+      systemd:
+        name: prometheus
+        state: restarted

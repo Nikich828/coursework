@@ -1,0 +1,142 @@
+# Установка и настройка Grafana (визуализация метрик)
+---
+- name: Установка и настройка Grafana из локального пакета
+  hosts: grafana  # Серверы Grafana
+  become: yes
+  vars:
+    # Переменные с дефолтными значениями
+    grafana_admin_pass: "{{ grafana_admin_password | default('admin123') }}"
+    prometheus_host_ip: "{{ hostvars['prometheus-server']['ansible_host'] | default('10.0.3.11') }}"
+
+  tasks:
+    # Установка зависимостей
+    - name: Установка зависимостей
+      apt:
+        name:
+          - adduser
+          - libfontconfig1
+          - musl
+          - wget
+        state: present
+        update_cache: yes
+
+    # Копирование локального пакета Grafana
+    - name: Копирование пакета Grafana на удаленный сервер
+      copy:
+        src: "/home/nvlychagin/Downloads/grafana-enterprise_12.3.1_20271043721_linux_amd64.deb"
+        dest: "/tmp/grafana.deb"
+        mode: 0644
+
+    # Установка
+    - name: Установка Grafana из локального пакета
+      apt:
+        deb: "/tmp/grafana.deb"
+        state: present
+      register: grafana_install
+
+    # Очистка временного файла
+    - name: Очистка временного пакета
+      file:
+        path: "/tmp/grafana.deb"
+        state: absent
+      when: grafana_install.changed
+
+    # Создание структуры директорий
+    - name: Создание необходимых директорий
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: grafana
+        group: grafana
+        mode: 0755
+      with_items:
+        - /etc/grafana/dashboards  # Для дашбордов
+        - /etc/grafana/provisioning/datasources  # Для источников данных
+        - /etc/grafana/provisioning/dashboards  # Для автоматического импорта дашбордов
+
+     # Основная конфигурация Grafana через шаблон
+    - name: Настройка Grafana через конфигурационный файл
+      template:
+        src: grafana.ini.j2
+        dest: /etc/grafana/grafana.ini
+        owner: grafana
+        group: grafana
+        mode: 0640
+      notify: restart grafana
+
+    # Настройка источника данных Prometheus через шаблон
+    - name: Настройка datasource Prometheus
+      template:
+        src: prometheus_datasource.yaml.j2
+        dest: /etc/grafana/provisioning/datasources/prometheus.yaml
+        owner: grafana
+        group: grafana
+        mode: 0644
+      notify: restart grafana
+
+    # Настройка provisioning для дашбордов через шаблон
+    - name: Настройка provisioning для дашбордов
+      template:
+        src: dashboards_provisioning.yaml.j2
+        dest: /etc/grafana/provisioning/dashboards/default.yaml
+        owner: grafana
+        group: grafana
+        mode: 0644
+      notify: restart grafana
+
+    # Уcтановка дашборда
+    - name: Копирование дашборда 11054_rev1.json
+      copy:
+        src: "/home/nvlychagin/Downloads/11054_rev1.json"
+        dest: /etc/grafana/dashboards/11054_rev1.json
+        owner: grafana
+        group: grafana
+        mode: 0644
+      notify: restart grafana
+
+    # Запуск и включение сервиса
+    - name: Включение службы Grafana
+      systemd:
+        name: grafana-server
+        enabled: yes
+        daemon_reload: yes
+
+    - name: Запуск службы Grafana
+      systemd:
+        name: grafana-server
+        state: started
+      register: service_start
+
+    # Ожидание запуска
+    - name: Ожидание запуска Grafana
+      wait_for:
+        port: 3000
+        state: started
+        delay: 5
+        timeout: 60
+
+    # Проверка статуса
+    - name: Проверка статуса службы
+      systemd:
+        name: grafana-server
+      register: service_status
+      changed_when: false
+
+    # Проверка доступности API
+    - name: Проверка доступности Grafana API
+      uri:
+        url: "http://localhost:3000/api/health"
+        method: GET
+        status_code: 200
+        timeout: 10
+      register: grafana_health
+      until: grafana_health.status == 200  # Повторять до успеха
+      retries: 12
+      delay: 5
+
+  handlers:
+    - name: restart grafana
+      systemd:
+        name: grafana-server
+        state: restarted
+        daemon_reload: yes

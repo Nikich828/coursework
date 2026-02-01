@@ -1,0 +1,54 @@
+# Установка Node Exporter для сбора системных метрик
+---
+- name: Установка Node Exporter на веб-серверы
+  hosts: webservers  # На все веб-серверы
+  become: yes
+
+  tasks:
+    # Создание отдельного пользователя
+    - name: Создание пользователя node_exporter
+      user:
+        name: node_exporter
+        system: yes
+        shell: /usr/sbin/nologin  # Без возможности входа
+
+    # Скачивание с GitHub
+    - name: Загрузка Node Exporter
+      get_url:
+        url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+        dest: /tmp/node_exporter.tar.gz
+
+    # Распаковка
+    - name: Распаковка Node Exporter
+      unarchive:
+        src: /tmp/node_exporter.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    # Установка бинарника
+    - name: Установка Node Exporter
+      copy:
+        src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+        dest: /usr/local/bin/node_exporter
+        owner: node_exporter
+        group: node_exporter
+        mode: '0755'
+        remote_src: yes
+
+    # Создание systemd службы из шаблона
+    - name: Создание systemd службы
+      template:
+        src: node_exporter.service.j2  # Использует шаблон
+        dest: /etc/systemd/system/node_exporter.service
+
+    # Перезагрузка systemd
+    - name: Перезагрузка systemd
+      systemd:
+        daemon_reload: yes
+
+    # Запуск сервиса
+    - name: Запуск Node Exporter
+      systemd:
+        name: node_exporter
+        state: started
+        enabled: yes

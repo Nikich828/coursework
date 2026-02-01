@@ -1,0 +1,55 @@
+# Установка Kibana (визуализация логов Elasticsearch)
+---
+- name: Установка Kibana
+  hosts: kibana
+  become: yes
+  
+  tasks:
+    # Копирование локального пакета
+    - name: Копирование пакета Kibana
+      copy:
+        src: /home/nvlychagin/Downloads/kibana-8.8.0-amd64.deb
+        dest: /tmp/kibana.deb
+
+    # Установка
+    - name: Установка Kibana
+      apt:
+        deb: /tmp/kibana.deb
+        state: present
+
+    # Применение шаблонной конфигурации
+    - name: Настройка Kibana
+      template:
+        src: kibana.yml.j2  # Использует шаблон kibana.yml.j2
+        dest: /etc/kibana/kibana.yml
+      notify: restart kibana
+
+    # Запуск сервиса
+    - name: Запуск Kibana
+      systemd:
+        name: kibana
+        state: started
+        enabled: yes
+
+    # Принудительный запуск обработчика перезагрузки
+    - name: Принудительный запуск хэндлера перезагрузки Kibana
+      meta: flush_handlers
+
+    # Даем Kibana время на инициализацию
+    - name: Даем Kibana время на инициализацию
+      pause:
+        seconds: 30
+
+    # Проверка доступности
+    - name: Проверка доступности Kibana
+      uri:
+        url: "http://localhost:5601/api/status"  # Проверка API
+        status_code: 200
+      retries: 20
+      delay: 10
+
+  handlers:
+    - name: restart kibana
+      systemd:
+        name: kibana
+        state: restarted

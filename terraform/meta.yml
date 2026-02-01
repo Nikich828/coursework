@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: nvlychagin  # Пользователь для всех ВМ
+    groups: sudo  # Права sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']  # Sudo без пароля
+    ssh-authorized-keys:  # SSH ключ для доступа
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDaCPolb1+d/0+rUL3l38w2j/ET1samviliF0o/FYjob nvlychagin@Netologiya

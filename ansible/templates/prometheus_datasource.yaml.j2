@@ -1,0 +1,9 @@
+apiVersion: 1
+datasources:
+  - name: Prometheus
+    type: prometheus
+    uid: prometheus 
+    access: proxy  # Прокси запросы через Grafana
+    url: http://{{ prometheus_host_ip }}:9090  # Динамический адрес Prometheus
+    isDefault: true  # Источник по умолчанию
+    editable: true

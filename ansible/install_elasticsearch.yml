@@ -1,0 +1,92 @@
+---
+- name: Установка Elasticsearch
+  hosts: elastic  # Целевая группа серверов
+  become: yes  # Повышение привилегий
+  
+  tasks:
+    # Установка Java
+    - name: Установка OpenJDK 17
+      apt:
+        name: openjdk-17-jdk-headless
+        state: present
+        update_cache: yes
+
+    # Увеличение лимитов памяти для Elasticsearch
+    - name: Увеличение лимита vm.max_map_count
+      sysctl:
+        name: "vm.max_map_count"
+        value: "262144"  # Увеличение лимита виртуальной памяти
+      notify: restart elasticsearch  # Триггер перезагрузки
+
+    # Копирование локального DEB пакета
+    - name: Копирование пакета Elasticsearch
+      copy:
+        src: "/home/nvlychagin/Downloads/elasticsearch-8.8.0-amd64.deb"
+        dest: "/tmp/elasticsearch.deb"
+
+    # Установка из локального пакета
+    - name: Установка Elasticsearch из пакета
+      apt:
+        deb: "/tmp/elasticsearch.deb"
+        state: present
+
+    # Очистка существующего keystore
+    - name: Удаление существующего elasticsearch.keystore
+      file:
+        path: "/etc/elasticsearch/elasticsearch.keystore"
+        state: absent
+      notify: restart elasticsearch
+
+    # Применение шаблонной конфигурации
+    - name: Конфигурация Elasticsearch
+      template:
+        src: "elasticsearch.yml.j2"
+        dest: "/etc/elasticsearch/elasticsearch.yml"
+        mode: 0640
+        owner: elasticsearch
+        group: elasticsearch
+      notify: restart elasticsearch
+
+    # Очистка SSL настроек (для отключенной безопасности)
+    - name: Удаление SSL пароля из keystore
+      shell: |
+        echo "y" | /usr/share/elasticsearch/bin/elasticsearch-keystore remove xpack.security.http.ssl.keystore.secure_password 2>/dev/null || true
+      args:
+        executable: /bin/bash
+      environment:
+        JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+      ignore_errors: yes
+      notify: restart elasticsearch
+
+    # Установка правильных прав на конфигурацию
+    - name: Установка прав доступа для директории Elasticsearch
+      file:
+        path: "/etc/elasticsearch"
+        state: directory
+        mode: 0750
+        owner: elasticsearch
+        group: elasticsearch
+        recurse: yes
+      notify: restart elasticsearch
+
+    # Запуск и включение сервиса
+    - name: Запуск и включение сервиса Elasticsearch
+      systemd:
+        name: elasticsearch
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    # Проверка доступности Elasticsearch
+    - name: Проверка доступности Elasticsearch
+      uri:
+        url: "http://localhost:9200"  # Проверка HTTP API
+        status_code: 200
+      retries: 10  # 10 попыток
+      delay: 5  # С задержкой 5 секунд
+
+  handlers:  # Обработчики для перезагрузки сервиса
+    - name: restart elasticsearch
+      systemd:
+        name: elasticsearch
+        state: restarted

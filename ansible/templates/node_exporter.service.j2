@@ -1,0 +1,25 @@
+# Systemd service для Node Exporter
+[Unit]
+Description=Node Exporter
+Documentation=https://prometheus.io/docs/guides/node-exporter/
+Wants=network-online.target
+After=network-online.target  
+
+[Service]
+Type=simple
+User=node_exporter
+Group=node_exporter
+ExecStart=/usr/local/bin/node_exporter
+  --collector.systemd  # Сбор метрик systemd
+  --collector.textfile.directory=/var/lib/node_exporter/textfile_collector  # Кастомные метрики
+  --web.listen-address=:9100  # Порт для метрик
+
+Restart=always
+RestartSec=3
+LimitNOFILE=65536
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,44 @@
+# Установка Filebeat (сборщик логов) на веб-серверы
+---
+- name: Установка Filebeat на веб-серверы
+  hosts: webservers  # Только веб-серверы
+  become: yes
+  
+  tasks:
+    # Копирование локального пакета
+    - name: Копирование пакета Filebeat
+      copy:
+        src: /home/nvlychagin/Downloads/filebeat-8.8.0-amd64.deb
+        dest: /tmp/filebeat.deb
+
+    # Установка
+    - name: Установка Filebeat
+      apt:
+        deb: /tmp/filebeat.deb
+        state: present
+
+    # Применение шаблонной конфигурации
+    - name: Настройка Filebeat конфигурации
+      template:
+        src: filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+
+    # Запуск сервиса
+    - name: Запуск Filebeat
+      systemd:
+        name: filebeat
+        state: started
+        enabled: yes
+        daemon_reload: yes
+
+    # Тестирование подключения к Elasticsearch
+    - name: Проверка работы Filebeat
+      command: filebeat test output
+      register: test_output
+      changed_when: false
+      ignore_errors: yes
+
+    # Вывод результатов теста
+    - name: Вывод результатов проверки
+      debug:
+        msg: "{{ test_output.stdout_lines }}"

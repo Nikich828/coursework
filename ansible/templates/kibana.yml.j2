@@ -1,0 +1,4 @@
+# Базовая конфигурация Kibana
+server.port: 5601  # Порт по умолчанию
+server.host: "0.0.0.0"  # Доступ со всех интерфейсов
+elasticsearch.hosts: ["http://{{ elasticsearch_host }}:9200"]  # Подключение к Elasticsearch (динамический адрес)

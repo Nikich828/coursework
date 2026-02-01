@@ -1,0 +1,10 @@
+# Базовые настройки кластера Elasticsearch
+cluster.name: coursework-cluster  # Имя кластера для идентификации
+node.name: {{ ansible_hostname }}  # Имя узла = имени хоста из Ansible
+path.data: /var/lib/elasticsearch  # Путь к данным
+path.logs: /var/log/elasticsearch  # Путь к логам
+network.host: 0.0.0.0  # Слушать на всех интерфейсах
+http.port: 9200  # Порт HTTP API
+discovery.type: single-node  # Одиночный узел (без кластеризации)
+xpack.security.enabled: false  # Отключение встроенной безопасности
+xpack.security.transport.ssl.enabled: false  # Отключение SSL для транспорта

@@ -1,0 +1,65 @@
+# Установка и настройка веб-сервера Nginx
+---
+- name: Установка и настройка Nginx на веб-серверах
+  hosts: webservers  # Все веб-серверы
+  become: yes
+  vars:
+    server_name: "{{ ansible_default_ipv4.address }}"  # IP адрес сервера
+    document_root: "{{ website_remote_path | default('/var/www/html') }}"  # Путь на сервере
+    app_root: "{{ website_local_path | default('../website') }}"  # Локальный путь к файлам
+
+  tasks:
+    # Создание директории для сайта
+    - name: Создание директории для сайта
+      file:
+        path: "{{ document_root }}"
+        state: directory
+        owner: www-data  # Пользователь Nginx
+        group: www-data
+        mode: '0755'
+
+    # Установка Nginx
+    - name: Обновление apt cache и установка Nginx
+      apt:
+        name: nginx
+        state: latest
+        update_cache: yes
+
+    # Копирование файлов сайта
+    - name: Копирование файлов сайта на сервер
+      copy:
+        src: "{{ app_root }}/"  # Копирование всей папки
+        dest: "{{ document_root }}/"
+        mode: preserve  # Сохранение прав
+
+    # Применение шаблона конфигурации
+    - name: Применение шаблона конфигурации Nginx
+      template:
+        src: nginx.conf.j2  # Использует шаблон nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+      notify: restart nginx
+
+    # Включение сайта
+    - name: Включение сайта
+      file:
+        src: /etc/nginx/sites-available/default
+        dest: /etc/nginx/sites-enabled/default
+        state: link  # Символическая ссылка
+      notify: restart nginx
+
+    # Проверка синтаксиса конфигурации
+    - name: Проверка конфигурации Nginx
+      command: nginx -t
+      register: nginx_test
+      changed_when: false
+
+    # Вывод результата проверки
+    - name: Вывод результата проверки Nginx
+      debug:
+        msg: "Проверка конфигурации Nginx: {{ nginx_test.stdout_lines }}"
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
