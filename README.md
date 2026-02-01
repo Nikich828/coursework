@@ -204,7 +204,7 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 ![Дашборд](https://github.com/Nikich828/coursework/blob/main/28.jpeg)
 
 
-Проверим работу ELK, для этого перейдем по ссылке **[Kibana](http://89.169.166.148:5601/app/home#/)**
+Проверим работу ELK, для этого перейдем по ссылке **[Kibana](http://89.169.166.148:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:'3a317e47-5bf0-49b8-b77c-7fd3f847b281',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))**
 
 **Проверяем работу ELK**:
 ![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/15.jpeg)
