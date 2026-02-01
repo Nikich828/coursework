@@ -162,7 +162,7 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 **Процесс применения плейбука install_filebeat.yml**:
 ![Процесс применения плейбука install_filebeat.yml](https://github.com/Nikich828/coursework/blob/main/10.jpeg)
 
-Проверим доступ к grafana и проверим работу дашборда по ссылке [Grafana]http://84.252.137.244:3000:
+Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana]http://84.252.137.244:3000**:
 
 **Проверка доступа к Grafana и работы дашборда**:
 ![Grafana](https://github.com/Nikich828/coursework/blob/main/11.jpeg)
