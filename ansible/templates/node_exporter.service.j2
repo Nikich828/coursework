@@ -1,4 +1,3 @@
-# Systemd service для Node Exporter
 [Unit]
 Description=Node Exporter
 Documentation=https://prometheus.io/docs/guides/node-exporter/
@@ -10,9 +9,9 @@ Type=simple
 User=node_exporter
 Group=node_exporter
 ExecStart=/usr/local/bin/node_exporter
-  --collector.systemd  # Сбор метрик systemd
-  --collector.textfile.directory=/var/lib/node_exporter/textfile_collector  # Кастомные метрики
-  --web.listen-address=:9100  # Порт для метрик
+  --collector.systemd  
+  --collector.textfile.directory=/var/lib/node_exporter/textfile_collector  
+  --web.listen-address=:9100  
 
 Restart=always
 RestartSec=3

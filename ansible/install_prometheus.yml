@@ -1,4 +1,3 @@
-# Установка Prometheus (система мониторинга и алертинга)
 ---
 - name: Установка и настройка Prometheus
   hosts: prometheus  # Сервер Prometheus

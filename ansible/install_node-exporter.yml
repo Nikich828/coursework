@@ -1,4 +1,3 @@
-# Установка Node Exporter для сбора системных метрик
 ---
 - name: Установка Node Exporter на веб-серверы
   hosts: webservers  # На все веб серверы

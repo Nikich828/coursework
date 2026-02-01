@@ -1,4 +1,3 @@
-# Установка экспортера логов Nginx для Prometheus
 ---
 - name: Установка Nginx Log Exporter на веб-серверы
   hosts: webservers  # На все веб серверы

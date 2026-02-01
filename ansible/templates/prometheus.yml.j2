@@ -1,21 +1,18 @@
-# Основная конфигурация Prometheus
 global:
-  scrape_interval: 15s  # Частота сбора метрик
-  evaluation_interval: 15s  # Частота оценки правил
+  scrape_interval: 15s  
+  evaluation_interval: 15s  
 
 scrape_configs:
-  # Конфигурация сбора метрик с Node Exporter
-  - job_name: 'node'  # Метрики системы
+  - job_name: 'node'  
     static_configs:
       - targets: 
-        {% for host in groups['webservers'] %}  # Динамически для всех веб-серверов
+        {% for host in groups['webservers'] %}  
         - '{{ hostvars[host].ansible_host }}:9100'
         {% endfor %}
 
-  # Конфигурация сбора метрик логов Nginx
-  - job_name: 'nginx'  # Метрики логов Nginx
+  - job_name: 'nginx'  
     static_configs:
       - targets: 
-        {% for host in groups['webservers'] %}  # Динамически для всех веб-серверов
+        {% for host in groups['webservers'] %}  
         - '{{ hostvars[host].ansible_host }}:4040'
         {% endfor %}
