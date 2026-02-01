@@ -2,7 +2,6 @@
 resource "yandex_vpc_security_group" "internal" {
   name        = "internal-security-group"
   network_id  = yandex_vpc_network.coursework.id
-  description = "Разрешает весь трафик внутри VPC"
 
   ingress {
     protocol       = "ANY"

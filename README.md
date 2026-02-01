@@ -162,6 +162,40 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 **Процесс применения плейбука install_filebeat.yml**:
 ![Процесс применения плейбука install_filebeat.yml](https://github.com/Nikich828/coursework/blob/main/10.jpeg)
 
+Заходим на yandex.cloud и проверяем результат поднятия инфраструктуры:
+
+**Проверка ВМ**:
+![ВМ](https://github.com/Nikich828/coursework/blob/main/30.jpeg)
+
+Проверим сеть, должен быть развернут один VPC. Webservers,elasticsearch в приватной подсети, а prometheus, grafana, kibana и alb в публичной.
+
+**Проверка сети**:
+![Сеть](https://github.com/Nikich828/coursework/blob/main/31.jpeg)
+![VPC](https://github.com/Nikich828/coursework/blob/main/24.jpeg)
+
+Проверим Target Group, Backend Group, HTTP router, Application load balancer:
+
+**Проверка Target Group, Backend Group, HTTP router, Application load balancer**:
+![Сеть](https://github.com/Nikich828/coursework/blob/main/19.jpeg)
+![VPC](https://github.com/Nikich828/coursework/blob/main/20.jpeg)
+![VPC](https://github.com/Nikich828/coursework/blob/main/21.jpeg)
+![VPC](https://github.com/Nikich828/coursework/blob/main/22.jpeg)
+![VPC](https://github.com/Nikich828/coursework/blob/main/23.jpeg)
+
+
+Теперь группы безопастности и балансировщик:
+
+**Проверка групп безопастности**:
+![Сеть](https://github.com/Nikich828/coursework/blob/main/25.jpeg)
+
+**Проверка балансировщика**:
+![Сеть](https://github.com/Nikich828/coursework/blob/main/29.jpeg)
+
+Перейдем по публичному адресу балансировщика **[Курсовая работа](http://84.201.170.18)**:
+
+**Сайт курсовая работа**:
+![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/13.jpeg)
+
 Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana](http://84.252.137.244:3000)**:
 
 **Проверка доступа к Grafana и работы дашборда**:
@@ -169,3 +203,16 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 ![Дашборд](https://github.com/Nikich828/coursework/blob/main/12.jpeg)
 ![Дашборд](https://github.com/Nikich828/coursework/blob/main/28.jpeg)
 
+
+Проверим работу ELK, для этого перейдем по ссылке **[Kibana](http://89.169.166.148:5601/app/home#/)**
+
+**Проверяем работу ELK**:
+![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/15.jpeg)
+![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/27.jpeg)
+
+
+Теперь проверим снапшоты:
+
+**Проверяем работу snapshot**:
+![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/26.jpeg)
+![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/32.jpeg)
