@@ -3,7 +3,7 @@ prometheus_host: "10.0.3.11"
 kibana_host: "10.0.4.13"
 grafana_host: "10.0.4.19"
   
-# Версии компонентов
+  
 elasticsearch_version: "8.8.0"
 kibana_version: "8.8.0"
 filebeat_version: "8.8.0"
