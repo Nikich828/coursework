@@ -191,12 +191,12 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 **Проверка балансировщика**:
 ![Сеть](https://github.com/Nikich828/coursework/blob/main/29.jpeg)
 
-Перейдем по публичному адресу балансировщика **[Курсовая работа](http://84.201.170.18)**:
+Перейдем по публичному адресу балансировщика **[Курсовая работа](http://158.160.223.127)**:
 
 **Сайт курсовая работа**:
 ![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/13.jpeg)
 
-Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana](http://84.252.137.244:3000/d/use-dashboard/dashboard?orgId=1&from=now-6h&to=now&timezone=browser&var-instance=$__all&var-mountpoint=$__all&var-device=$__all&refresh=10s)**:
+Проверим доступ к grafana и проверим работу дашборда по ссылке **[Grafana](http://158.160.19.43:3000/d/use-dashboard/dashboard?orgId=1&from=now-6h&to=now&timezone=browser&var-instance=$__all&var-mountpoint=$__all&var-device=$__all&refresh=10s)**:
 
 **Проверка доступа к Grafana и работы дашборда**:
 ![Grafana](https://github.com/Nikich828/coursework/blob/main/11.jpeg)
@@ -204,7 +204,7 @@ ansible-playbook -i inventory.ini install_filebeat.yml
 ![Дашборд](https://github.com/Nikich828/coursework/blob/main/28.jpeg)
 
 
-Проверим работу ELK, для этого перейдем по ссылке **[Kibana](http://89.169.166.148:5601/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:'3a317e47-5bf0-49b8-b77c-7fd3f847b281',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))**
+Проверим работу ELK, для этого перейдем по ссылке **[Kibana](http://158.160.85.121/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:60000),time:(from:now-15m,to:now))&_a=(columns:!(),filters:!(),index:'3a317e47-5bf0-49b8-b77c-7fd3f847b281',interval:auto,query:(language:kuery,query:''),sort:!(!('@timestamp',desc))))**
 
 **Проверяем работу ELK**:
 ![Курсовая работа](https://github.com/Nikich828/coursework/blob/main/15.jpeg)
