@@ -283,10 +283,3 @@ else
     echo "⚠️  Nginx Exporter метрики недоступны"
 fi
 
-echo
-echo "=== ДЕЙСТВИЯ ==="
-echo "1. Откройте Grafana: http://10.0.4.19:3000"
-echo "2. Импортируйте полный дашборд для курсовой работы"
-echo "3. Проверьте метрики в Prometheus: http://10.0.3.11:9090"
-echo "4. Откройте Kibana для просмотра логов: http://10.0.4.13:5601"
-echo "5. Проверьте балансировщик: получите IP через 'terraform output alb_external_ip'"
